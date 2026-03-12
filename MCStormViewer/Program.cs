@@ -25,6 +25,10 @@ public class Program
     private static World? _currentWorld;
     private static string? _currentWorldPath;
 
+    // Preloaded worlds cache
+    private static bool _preload;
+    private static readonly Dictionary<string, World> _worldCache = new(StringComparer.OrdinalIgnoreCase);
+
     // Hot-reload
     private static FileSystemWatcher? _watcher;
     private static bool _reloadPending;
@@ -36,11 +40,14 @@ public class Program
     private static double _fpsAccumulator;
     private static int _fpsFrameCount;
 
-    // Tab key debounce
+    // Key debounce
     private static bool _tabWasPressed;
+    private static bool _nextWorldWasPressed;
 
     public static void Main(string[] args)
     {
+        _preload = args.Contains("--preload", StringComparer.OrdinalIgnoreCase);
+
         _levelsPath = FindLevelsPath();
         if (_levelsPath == null)
         {
@@ -50,7 +57,33 @@ public class Program
             return;
         }
 
+        if (_preload)
+            PreloadWorlds();
+
         LaunchViewer();
+    }
+
+    private static void PreloadWorlds()
+    {
+        var files = Directory.GetFiles(_levelsPath!, "*.lvl");
+        Console.WriteLine($"Preloading {files.Length} worlds...");
+        int loaded = 0;
+        foreach (var file in files)
+        {
+            try
+            {
+                var world = LvlParser.Parse(file);
+                _worldCache[Path.GetFullPath(file)] = world;
+                loaded++;
+                if (loaded % 50 == 0)
+                    Console.Write($"\r  {loaded}/{files.Length}...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\r  Skipped {Path.GetFileName(file)}: {ex.Message}");
+            }
+        }
+        Console.WriteLine($"\r  Preloaded {loaded}/{files.Length} worlds.          ");
     }
 
     private static string? FindLevelsPath()
@@ -135,8 +168,12 @@ public class Program
 
     private static void OnFileChanged(object? sender, FileSystemEventArgs e)
     {
+        string fullPath = Path.GetFullPath(e.FullPath);
+        // Invalidate cache for changed file
+        _worldCache.Remove(fullPath);
+
         if (_currentWorldPath != null &&
-            string.Equals(Path.GetFullPath(e.FullPath), Path.GetFullPath(_currentWorldPath), StringComparison.OrdinalIgnoreCase))
+            string.Equals(fullPath, Path.GetFullPath(_currentWorldPath), StringComparison.OrdinalIgnoreCase))
         {
             _reloadRequestedAt = DateTime.UtcNow;
             _reloadPending = true;
@@ -147,7 +184,12 @@ public class Program
     {
         try
         {
-            var world = LvlParser.Parse(path);
+            string fullPath = Path.GetFullPath(path);
+            if (!_worldCache.TryGetValue(fullPath, out var world))
+            {
+                world = LvlParser.Parse(path);
+                _worldCache[fullPath] = world;
+            }
 
             _renderer!.ClearChunks();
             _currentWorld = world;
@@ -156,12 +198,10 @@ public class Program
             _gui?.SetCurrentWorld(Path.GetFileNameWithoutExtension(path));
             _window!.Title = $"MCStorm Viewer - {world.Width}x{world.Height}x{world.Length}";
 
-            // Camera at spawn position
-            _camera = new Camera(new Vector3(
-                world.SpawnX + 0.5f,
-                world.SpawnY + 1.7f,
-                world.SpawnZ + 0.5f
-            ));
+            // Camera at overview position, looking diagonally down
+            _camera = new Camera(new Vector3(world.Width / 2f, world.Height, world.Length / 2f));
+            _camera.Pitch = -89f;
+            _camera.UpdateVectors();
 
             // Mesh all chunks
             for (int cy = 0; cy < world.ChunksY; cy++)
@@ -187,6 +227,29 @@ public class Program
         {
             Console.WriteLine($"Error loading world: {ex.Message}");
         }
+    }
+
+    private static void LoadNextWorld(int direction)
+    {
+        if (_levelsPath == null) return;
+
+        var files = Directory.GetFiles(_levelsPath, "*.lvl")
+            .OrderBy(f => Path.GetFileName(f), StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (files.Length == 0) return;
+
+        if (_currentWorldPath == null)
+        {
+            LoadWorld(files[0]);
+            return;
+        }
+
+        int currentIndex = Array.FindIndex(files, f =>
+            string.Equals(Path.GetFullPath(f), Path.GetFullPath(_currentWorldPath), StringComparison.OrdinalIgnoreCase));
+
+        int nextIndex = (currentIndex + direction + files.Length) % files.Length;
+        LoadWorld(files[nextIndex]);
     }
 
     private static void SetMouseCaptured(bool captured)
@@ -258,6 +321,14 @@ public class Program
         {
             _renderer!.FogEnabled = !_renderer.FogEnabled;
         }
+
+        // PageDown / N = load next world in list
+        bool nextPressed = _keyboard.IsKeyPressed(Key.PageDown) || _keyboard.IsKeyPressed(Key.N);
+        if (nextPressed && !_nextWorldWasPressed && !(_gui?.WantCaptureKeyboard() ?? false))
+        {
+            LoadNextWorld(1);
+        }
+        _nextWorldWasPressed = nextPressed;
 
         // Re-capture mouse on click when browser is closed
         if (_mouse != null && !_mouseCaptured && _mouse.IsButtonPressed(MouseButton.Left) &&

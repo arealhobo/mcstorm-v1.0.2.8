@@ -134,11 +134,12 @@ public class GuiOverlay : IDisposable
             if (world != null && camera != null)
             {
                 ImGui.Text(
-                    $"World: {world.Width}x{world.Height}x{world.Length}  |  " +
+                    $"{_currentWorldName ?? "Unknown"} ({world.Width}x{world.Height}x{world.Length})  |  " +
                     $"Pos: ({camera.Position.X:F1}, {camera.Position.Y:F1}, {camera.Position.Z:F1})  |  " +
+                    $"Yaw: {camera.Yaw:F1} Pitch: {camera.Pitch:F1}  |  " +
                     $"Speed: {camera.Speed:F0}  |  " +
                     $"FPS: {fps:F0}  |  " +
-                    $"[Tab] Browser  [F] Fog  [Esc] Quit");
+                    $"[Tab] Browser  [PgDn/N] Next World  [F] Fog  [Esc] Quit");
             }
             else
             {

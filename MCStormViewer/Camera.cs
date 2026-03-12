@@ -66,7 +66,7 @@ public class Camera
         );
     }
 
-    private void UpdateVectors()
+    public void UpdateVectors()
     {
         float yawRad = Yaw * MathF.PI / 180f;
         float pitchRad = Pitch * MathF.PI / 180f;

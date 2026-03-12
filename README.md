@@ -14,6 +14,12 @@ cd MCStormViewer
 dotnet run
 ```
 
+To preload all worlds into memory at startup for faster switching:
+
+```
+dotnet run -- --preload
+```
+
 The viewer launches directly into a 3D window with an ImGui world browser overlay. Select any `.lvl` world from the browser panel to load and explore it.
 
 World files are bundled in `MCStormViewer/levels/`. You can also drop additional `.lvl` files into that directory — the viewer will detect new and changed files automatically via hot-reload.
@@ -35,6 +41,7 @@ World files are bundled in `MCStormViewer/levels/`. You can also drop additional
 | Scroll | Adjust speed |
 | F | Toggle fog |
 | Tab | Toggle world browser |
+| PgDn / N | Load next world |
 | Esc | Release mouse / Exit |
 
 ### Hot-Reload
