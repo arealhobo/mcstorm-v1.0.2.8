@@ -1,0 +1,20 @@
+# Build output
+MCStormViewer/bin/
+MCStormViewer/obj/
+
+# Sensitive config
+properties/
+Viewmode.cfg
+
+# Logs
+logs/
+
+# Server data
+ranks/
+groups/
+bots/
+extra/
+text/
+
+# Levels (too large for git)
+levels/
