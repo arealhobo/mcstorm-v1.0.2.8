@@ -1,6 +1,6 @@
 # MCStorm v1.0.2.8
 
-Classic Minecraft server with a built-in 3D world viewer.
+A 3D world viewer for Classic Minecraft `.lvl` files.
 
 ## Prerequisites
 
@@ -8,14 +8,6 @@ Classic Minecraft server with a built-in 3D world viewer.
 - OpenGL 3.3+ compatible GPU
 
 ## Quick Start
-
-### Server
-
-```
-MCStorm.exe
-```
-
-### World Viewer
 
 ```
 cd MCStormViewer
@@ -48,3 +40,9 @@ World files are bundled in `MCStormViewer/levels/`. You can also drop additional
 ### Hot-Reload
 
 If you modify or replace a `.lvl` file while it is loaded, the viewer will automatically reload it within about one second.
+
+## Contributors
+
+Players who built worlds on the MCStorm server:
+
+30jon, 499285006, 617lobos, ahardy14, areublem, biel_mcg7, bobeevee, Bob_the_Builderr, CallumBoy265, camac11, chris_penn78, codmod123, cole3000, coulombevin, creepersarehere, cripto, danieldv77, Den8, denny1124, dillon_bo21c, dji152, doomphx, Doomsun50, Evil_30jon, hampaboii, hedgie98, Hordmann, ibelooney, II_LOST_ODST, imanazi, Ininjaninja, Invincible1000, itiscoming78, jason274, jhmoreira, jjj3499, jugiss69, kalon5, KansasJayhawkz25, killer2591, kingedfoolface, klopolo, kristjanaus1, lalo562, lizard725, luckycharms01, mabp, Maister77, maksim106, marattremolo, Markdood88, mathys31, mryeans, nederlandisbest, noah695, noname52, PackedInsanity, pancakelicker, parktatkrap, patrickjin6, pepe822, poooopy232, rezin123, rocsmasher, rodo_le_sodo, roflwaffle117, rridge, sandroarminana, santorini, santy123456789, sasasa1, Shadowmech415, shane0161, shotgem300, sididi, simpergirl, Sk1llsT3R, Skyline_7i, spoonoz, storryashmore1, sugarmelons, themsvej, Toby951, touchofsoul, tristanqq, txboy45, unseensniper, valdeham06, VIP_Skiill, xboxgamer969, _sebe_
