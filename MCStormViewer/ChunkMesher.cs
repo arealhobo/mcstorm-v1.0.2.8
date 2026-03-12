@@ -68,7 +68,17 @@ public static class ChunkMesher
         if (!BlockColors.IsTransparent(neighbor)) return false; // Opaque neighbor - don't draw
         // Transparent neighbor: draw if we're opaque, or if we're a different block type
         if (!thisTransparent) return true;
-        return neighbor != thisBlock;
+        return !SameTransparentGroup(thisBlock, neighbor);
+    }
+
+    private static bool SameTransparentGroup(byte a, byte b)
+    {
+        if (a == b) return true;
+        // Treat flowing water (8) and still water (9) as the same
+        if ((a == 8 || a == 9) && (b == 8 || b == 9)) return true;
+        // Treat flowing lava (10) and still lava (11) as the same
+        if ((a == 10 || a == 11) && (b == 10 || b == 11)) return true;
+        return false;
     }
 
     private enum Face { PosX, NegX, PosY, NegY, PosZ, NegZ }
@@ -76,7 +86,8 @@ public static class ChunkMesher
     private static void AddFace(List<float> verts, int x, int y, int z, Face face, Vector3 color, float alpha)
     {
         // Face shade multiplier for basic ambient occlusion feel
-        float shade = face switch
+        // Skip directional shading for translucent blocks to avoid visible grid edges
+        float shade = alpha < 1.0f ? 1.0f : face switch
         {
             Face.PosY => 1.0f,
             Face.NegY => 0.5f,

@@ -109,5 +109,10 @@ public static class BlockColors
 
     public static Vector3 GetColor(byte blockId) => _colors[blockId];
     public static bool IsTransparent(byte blockId) => _transparent[blockId];
-    public static float GetAlpha(byte blockId) => blockId == 20 ? 0.4f : 1.0f;
+    public static float GetAlpha(byte blockId) => blockId switch
+    {
+        8 or 9 => 0.55f,  // Water
+        20 => 0.4f,       // Glass
+        _ => 1.0f,
+    };
 }
