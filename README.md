@@ -2,6 +2,8 @@
 
 A 3D world viewer for Classic Minecraft `.lvl` files.
 
+View and explore Minecraft Classic worlds in an OpenGL renderer with free camera movement. Supports ClassiCube, MCSharp, MCZall, MCLawl, MCForge, MCGalaxy, fCraft, and other Classic-era server `.lvl` map files. 307 preserved worlds from a 2011 Minecraft Classic server included.
+
 ## Prerequisites
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
