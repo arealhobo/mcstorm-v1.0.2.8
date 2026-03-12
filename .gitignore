@@ -16,5 +16,8 @@ bots/
 extra/
 text/
 
-# Levels (too large for git)
-levels/
+# Server levels (backups + server runtime data)
+/levels/
+
+# Viewer levels are tracked (MCStormViewer/levels/*.lvl)
+

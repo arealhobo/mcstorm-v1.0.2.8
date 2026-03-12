@@ -22,7 +22,9 @@ cd MCStormViewer
 dotnet run
 ```
 
-Select a world from the list. The viewer loads `.lvl` files from the `levels/` directory.
+The viewer launches directly into a 3D window with an ImGui world browser overlay. Select any `.lvl` world from the browser panel to load and explore it.
+
+World files are bundled in `MCStormViewer/levels/`. You can also drop additional `.lvl` files into that directory — the viewer will detect new and changed files automatically via hot-reload.
 
 ### Controls
 
@@ -34,5 +36,9 @@ Select a world from the list. The viewer loads `.lvl` files from the `levels/` d
 | Shift | Down |
 | Scroll | Adjust speed |
 | F | Toggle fog |
-| Tab | Back to world list |
+| Tab | Toggle world browser |
 | Esc | Release mouse / Exit |
+
+### Hot-Reload
+
+If you modify or replace a `.lvl` file while it is loaded, the viewer will automatically reload it within about one second.
