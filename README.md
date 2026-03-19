@@ -1,4 +1,4 @@
-# MCStorm v1.0.2.8
+# Minecraft Classic Creative Lvl Viewer
 
 A 3D world viewer for Classic Minecraft `.lvl` files.
 
